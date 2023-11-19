@@ -35,7 +35,6 @@ class KayRetriever:
         embed_store_response = call_kay(query, dataset_config, retrieval_config)
 
         if embed_store_response.get("success") == True:
-            contexts = embed_store_response.get("contexts")
-            return contexts
+            return embed_store_response.get("contexts")
         else:
             raise ServerError(embed_store_response.get("error", "Unknown Error"))

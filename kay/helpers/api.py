@@ -30,17 +30,16 @@ def call_kay(prompt, dataset_config=None, retrieval_config=None):
     # Parsing the response and handling errors
     if response.status_code == 200:
         response_json = response.json()
-        if response_json["success"] in {True, "true"}:
-            response_json["success"] = True
-            return response_json
-        else:
+        if response_json["success"] not in {True, "true"}:
             raise ServerError(
                 f'Server error : {response_json["error"]}. If this persists, please create an issue here - '
                 f"https://github.com/kaydotai/kay/issues "
             )
+        response_json["success"] = True
+        return response_json
     elif response.status_code == 400:
         raise ServerError(f"Server error 400 for -- {url}")
     elif response.status_code == 401:
-        raise APIKeyError(f"Invalid API Key, please contact us at hello@kay.ai")
+        raise APIKeyError("Invalid API Key, please contact us at hello@kay.ai")
     else:
         raise ServerError(f"Server error : {response.status_code}")
